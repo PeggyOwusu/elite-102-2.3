@@ -34,10 +34,9 @@ def sign_in():
 
   
 def create_acc(): 
-  try:
-    username = input("Enter username: ")
-    email = input("Enter email: ")
-    acc_pin = input("Create account pin: ")
+  username = input("Enter username: ")
+  email = input("Enter email: ")
+  acc_pin = input("Create account pin: ")
 
   conn = mysql.connector(database="bankapp", user="root", password="0saeAnnett3")
   cursor = conn.cursor()
@@ -45,12 +44,7 @@ def create_acc():
   conn.commit()
   conn.close()
   #  print("After making your account, you will be sent to the welcome menue. Then you will select sign in.")
-  print("Account created successfully!")
-
-  except mysql.connector.Error as err:
-    print(f"Error creating account: {err}")
-
-
+  
 
 print("Welcome. What would you like to do?")
 
