@@ -38,11 +38,19 @@ def create_acc():
   email = input("Enter email: ")
   acc_pin = input("Create account pin: ")
 
-  conn = mysql.connector(database="bankapp", user="root", password="0saeAnnett3")
+  conn = mysql.connector.connect(database="bankapp", user="root", password="0saeAnnett3")
   cursor = conn.cursor()
   cursor.execute("INSERT INTO accounts (username, email, acc_pin) VALUES (%s, %s, %s)", (username, email, acc_pin))
+  #fix error by making acc_num on sql auto incrim (AI)
   conn.commit()
+
+  cursor.execute("SELECT LAST_INSERT_ID()")
+  acc_num = cursor.fetchone()[0]
+
   conn.close()
+
+  print("Account created successfully!")
+  print("Your account number is:", acc_num)
   #  print("After making your account, you will be sent to the welcome menue. Then you will select sign in.")
   
 
