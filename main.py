@@ -4,8 +4,8 @@ print("Hello and welcome to BigBucks Bank.")
 print("-----------------------------------")
 
 def welcome_menu():
-  print("1. Sign in to bank account\n")
-  print("2. Create account\n")
+  print("1. Sign in to bank account")
+  print("2. Create account")
 
 print("\nBefore we begin, please sign in to your account. If you don't have an account, please select option 2. \n")
 def user_selection():
@@ -16,37 +16,43 @@ def sign_in():
   acc_num = input("Enter account number:")
   acc_pin = input("Enter account pin:")
   
+  conn = mysql.connector.connect(database="bankapp", user="root", password="0saeAnnett3")
+  cursor = conn.cursor()
+  cursor.execute("SELECT acc_num, acc_pin FROM accounts WHERE acc_num = %s", (acc_num,))
+  account = cursor.fetchone()
+
+  if account:
+    if account[1] == acc_pin:
+      print("Sign-in successful!")
+
+    else:
+      print("Incorrect PIN. Please try again.")
+  else:
+    print("Account number not found. Please try again.")
+
+  conn.close()
+
+  
 def create_acc(): 
+  try:
+    username = input("Enter username: ")
+    email = input("Enter email: ")
+    acc_pin = input("Create account pin: ")
+
   conn = mysql.connector(database="bankapp", user="root", password="0saeAnnett3")
   cursor = conn.cursor()
   cursor.execute("INSERT INTO accounts (username, email, acc_pin) VALUES (%s, %s, %s)", (username, email, acc_pin))
   conn.commit()
   conn.close()
   #  print("After making your account, you will be sent to the welcome menue. Then you will select sign in.")
+  print("Account created successfully!")
 
-  
-
-
-#if user_selection == "1":
- # sign_in()
-#elif user_selection == "2":
- # create_acc()
-
-#welcome_menu()
-#while program_loop:
-#  option = user_selection()
-
-#if option in range:
-# if option == 1:
-    #sign_in()
-#elif option == 2:
- #   create_acc()
+  except mysql.connector.Error as err:
+    print(f"Error creating account: {err}")
 
 
 
-
-print("welcome. What would you like to do?")
-#range = (1, 2, 3, 4, 5)
+print("Welcome. What would you like to do?")
 
 def bank_menu():
   print("1. Check Balance")
@@ -106,37 +112,32 @@ while True:
 
       bank_menu()
       choice = user_choice()
-      if choice == 1:
+      if choice == 1: #check balance
         acc_num = input("Enter your account number: ")
         balance = check_balance(acc_num)
         print("Your balance is:", balance)         
-        pass
-      elif choice == 2:
-        withdraw()
-        pass
-      elif choice == 3:
-        deposit()
-        pass
-      elif choice == 4:
-        modify()
-        pass
-      elif choice == 5:
-        delete()
-        pass   
+        
+      elif choice == 2: #withdraw
+        acc_num = input("Enter your account number: ")
+        amount = float(input("Enter amount to withdraw: "))
+        withdraw(acc_num, amount)
+        
+      elif choice == 3:#deposit
+        acc_num = input("Enter your account number: ")
+        amount = float(input("Enter amount to deposit: "))
+        deposit(acc_num, amount)
+        
+      elif choice == 4: #modify acc
+        acc_num = input("Enter your account number: ")
+        new_email = input("Enter new email: ")
+        new_password = input("Enter new password: ")
+        modify(acc_num, new_email, new_password)
+        
+      elif choice == 5: #delete acc
+        acc_num = input("Enter your account number: ")
+        delete(acc_num)
+        break   
     
     elif option == 2:
         create_acc()
-        bank_menu()
-        choice = user_choice()
-
-#bank_menu()1
-#if user_choice == "1":
- # check_balance()
-#elif user_choice == "2":
- # withdraw()
-#elif user_choice == "3":
- # deposit()
-#elif user_choice == "4":
- # modify()
-#elif user_choice == "5":
- # delete()
+        break
