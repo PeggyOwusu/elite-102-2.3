@@ -1,15 +1,11 @@
 import mysql.connector
 
-program_loop = True
-
 print("Hello and welcome to BigBucks Bank.")
 print("-----------------------------------")
 
 def welcome_menu():
   print("1. Sign in to bank account\n")
   print("2. Create account\n")
-
-range = (1, 2)
 
 print("\nBefore we begin, please sign in to your account. If you don't have an account, please select option 2. \n")
 def user_selection():
@@ -26,22 +22,25 @@ def create_acc():
   cursor.execute("INSERT INTO accounts (username, email, acc_pin) VALUES (%s, %s, %s)", (username, email, acc_pin))
   conn.commit()
   conn.close()
+  #  print("After making your account, you will be sent to the welcome menue. Then you will select sign in.")
+
+  
 
 
-if user_selection == "1":
-  sign_in()
-elif user_selection == "2":
-  create_acc()
+#if user_selection == "1":
+ # sign_in()
+#elif user_selection == "2":
+ # create_acc()
 
-welcome_menu()
-while program_loop:
-  option = user_selection()
+#welcome_menu()
+#while program_loop:
+#  option = user_selection()
 
-if option in range:
-  if option == 1:
-    sign_in()
-  elif option == 2:
-    create_acc()
+#if option in range:
+# if option == 1:
+    #sign_in()
+#elif option == 2:
+ #   create_acc()
 
 
 
@@ -50,7 +49,11 @@ print("welcome. What would you like to do?")
 #range = (1, 2, 3, 4, 5)
 
 def bank_menu():
-  print ("1. Check Balance\n2. Withdraw Money\n3. Deposit Money\n4.Modify Account\n5. Delete Account")
+  print("1. Check Balance")
+  print("2. Withdraw Money")
+  print("3. Deposit Money")
+  print("4. Modify Account")
+  print("5. Delete Account")
 
 def user_choice():
   user_choice = int(input("\nSelect an option by typing a number:"))
@@ -95,15 +98,45 @@ def delete(acc_num):
   conn.commit()
   conn.close()
 
+welcome_menu()
+while True:
+    option = user_selection()
+    if option == 1:
+      sign_in()
 
-bank_menu()
-if user_choice == "1":
-  check_balance()
-elif user_choice == "2":
-  withdraw()
-elif user_choice == "3":
-  deposit()
-elif user_choice == "4":
-  modify()
-elif user_choice == "5":
-  delet()
+      bank_menu()
+      choice = user_choice()
+      if choice == 1:
+        acc_num = input("Enter your account number: ")
+        balance = check_balance(acc_num)
+        print("Your balance is:", balance)         
+        pass
+      elif choice == 2:
+        withdraw()
+        pass
+      elif choice == 3:
+        deposit()
+        pass
+      elif choice == 4:
+        modify()
+        pass
+      elif choice == 5:
+        delete()
+        pass   
+    
+    elif option == 2:
+        create_acc()
+        bank_menu()
+        choice = user_choice()
+
+#bank_menu()1
+#if user_choice == "1":
+ # check_balance()
+#elif user_choice == "2":
+ # withdraw()
+#elif user_choice == "3":
+ # deposit()
+#elif user_choice == "4":
+ # modify()
+#elif user_choice == "5":
+ # delete()
