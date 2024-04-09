@@ -1,4 +1,5 @@
 import mysql.connector
+import unittest
 
 print("Hello and welcome to BigBucks Bank.")
 print("-----------------------------------")
@@ -41,7 +42,6 @@ def create_acc():
   conn = mysql.connector.connect(database="bankapp", user="root", password="0saeAnnett3")
   cursor = conn.cursor()
   cursor.execute("INSERT INTO accounts (username, email, acc_pin) VALUES (%s, %s, %s)", (username, email, acc_pin))
-  #fix error by making acc_num on sql auto incrim (AI)
   conn.commit()
 
   cursor.execute("SELECT LAST_INSERT_ID()")
@@ -52,10 +52,7 @@ def create_acc():
   print("Account created successfully!")
   print("Your account number is:", acc_num)
   #  print("After making your account, you will be sent to the welcome menue. Then you will select sign in.")
-  
-
-print("Welcome. What would you like to do?")
-
+  1
 def bank_menu():
   print("1. Check Balance")
   print("2. Withdraw Money")
