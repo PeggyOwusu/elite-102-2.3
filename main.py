@@ -1,5 +1,6 @@
 import mysql.connector
-import unittest
+
+import tkinter as tk
 
 print("Hello and welcome to BigBucks Bank.")
 print("-----------------------------------")
@@ -19,12 +20,12 @@ def sign_in():
   
   conn = mysql.connector.connect(database="bankapp", user="root", password="0saeAnnett3")
   cursor = conn.cursor()
-  cursor.execute("SELECT acc_num, acc_pin FROM accounts WHERE acc_num = %s", (acc_num,))
+  cursor.execute("SELECT acc_num, acc_pin FROM accounts WHERE acc_num = %s", (acc_num))
   account = cursor.fetchone()
 
   if account:
     if account[1] == acc_pin:
-      print("Sign-in successful!")
+      print("Sign-in successful.")
 
     else:
       print("Incorrect PIN. Please try again.")
@@ -52,7 +53,7 @@ def create_acc():
   print("Account created successfully!")
   print("Your account number is:", acc_num)
   #  print("After making your account, you will be sent to the welcome menue. Then you will select sign in.")
-  1
+  
 def bank_menu():
   print("1. Check Balance")
   print("2. Withdraw Money")
@@ -73,35 +74,67 @@ def check_balance(acc_num):
   conn.close()
   return balance
 
-def withdraw(acc_num, amount):
-  conn = mysql.connector(database="bankapp", user="root", password="0saeAnnett3")
-  cursor = conn.cursor()
-  cursor.execute("UPDATE accounts SET balance = balance - %s WHERE acc_num = %s", (amount, acc_num))
-  cursor.execute("INSERT INTO transactions (acc_num, amount, transc_type) VALUES (%s, %s, 'withdrawal')", (acc_num, amount))
-  conn.commit()
-  conn.close()
+def withdraw():
+  acc_num = acc_num_entry.get()
+  amount = float(amount_entry.get())
+  withdraw(acc_num, amount)
+  balance = check_balance(acc_num)
+  withdraw_success_label.config(text=f"Withdrawal successful. Your balance is now {balance}")
 
-def deposit(acc_num, amount):
-  conn = mysql.connector(database="bankapp", user="root", password="0saeAnnett3")
-  cursor = conn.cursor()
-  cursor.execute("UPDATE accounts SET balance = balance + %s WHERE acc_num = %s", (amount, acc_num))
-  cursor.execute("INSERT INTO transactions (acc_num, amount, transaction_type) VALUES (%s, %s, 'deposit')", (acc_num, amount))
-  conn.commit()
-  conn.close()
+def deposit():
+  acc_num = acc_num_entry.get()
+  amount = float(deposit_amount_entry.get())
+  deposit(acc_num, amount)
+  balance = check_balance(acc_num)
+  deposit_success_label.config(text=f"Deposit successful. Your balance is now {balance}")
 
-def modify(acc_num, new_email, new_password):
-  conn = mysql.connector(database="bankapp", user="root", password="0saeAnnett3")
-  cursor = conn.cursor()
-  cursor.execute("UPDATE accounts SET email = %s, password = %s WHERE acc_num = %s", (new_email, new_password, acc_numd))
-  conn.commit()
-  conn.close()
+def modify_account():
+  acc_num = acc_num_entry.get()
+  new_email = new_email_entry.get()
+  new_password = new_password_entry.get()
+  modify(acc_num, new_email, new_password)
+  modify_success_label.config(text="Modification successful.")
 
-def delete(acc_num):
-  conn = mysql.connector(database="bankapp", user="root", password="0saeAnnett3")
-  cursor = conn.cursor()
-  cursor.execute("DELETE FROM accounts WHERE acc_num = %s", (acc_num,))
-  conn.commit()
-  conn.close()
+def delete_account():
+  acc_num = acc_num_entry.get()
+  delete(acc_num)
+  delete_success_label.config(text="Your account has been deleted. Goodbye.")
+
+
+def on_sign_in():
+  acc_num = acc_num_entry.get()
+  acc_pin = acc_pin_entry.get()
+  sign_in()
+
+def on_create_account():
+  create_acc()
+
+def on_balance_check():
+  acc_num = acc_num_entry.get()
+  balance = check_balance(acc_num)
+  balance_label.config(text="Your balance is: " + str(balance))
+
+root = tk.Tk()
+root.title("BigBucks Bank")
+
+signin_frame = tk.Frame(root, padx=10, pady=10)
+signin_frame.pack()
+
+welcome_label = tk.Label(signin_frame, text="Welcome to BigBucks Bank!")
+welcome_label.grid(row=0, columnspan=2)
+
+acc_num_label_signin = tk.Label(signin_frame, text="Account Number:")
+acc_num_label_signin.grid(row=1, column=0)
+acc_num_entry = tk.Entry(signin_frame)
+acc_num_entry.grid(row=1, column=1)
+
+acc_pin_label_signin = tk.Label(signin_frame, text="PIN:")
+acc_pin_label_signin.grid(row=2, column=0)
+acc_pin_entry = tk.Entry(signin_frame)
+acc_pin_entry.grid(row=2, column=1)
+
+sign_in_button = tk.Button(signin_frame, text="Sign In", command=sign_in)
+sign_in_button.grid(row=3, columnspan=2, pady=5)
 
 welcome_menu()
 while True:
@@ -140,3 +173,4 @@ while True:
     elif option == 2:
         create_acc()
         break
+
