@@ -77,16 +77,29 @@ def check_balance(acc_num):
 def withdraw():
   acc_num = acc_num_entry.get()
   amount = float(amount_entry.get())
-  withdraw(acc_num, amount)
-  balance = check_balance(acc_num)
-  withdraw_success_label.config(text=f"Withdrawal successful. Your balance is now {balance}")
+  conn = mysql.connector.connect(database="bankapp", user="root", password="0saeAnnett3")
+  cursor = conn.cursor()
+  cursor.execute("SELECT balance FROM accounts WHERE acc_num = %s", (acc_num,))
+  balance = cursor.fetchone()[0]
+  if balance >= amount:
+    new_balance = balance - amount
+    cursor.execute("UPDATE accounts SET balance = %s WHERE acc_num = %s", (new_balance, acc_num))
+    conn.commit()
+    print(f"Withdrawal successful. Your balance is now {new_balance}")
+  else:
+    print("Error", "Insufficient funds.")
+  conn.close()
 
 def deposit():
   acc_num = acc_num_entry.get()
   amount = float(deposit_amount_entry.get())
   deposit(acc_num, amount)
   balance = check_balance(acc_num)
-  deposit_success_label.config(text=f"Deposit successful. Your balance is now {balance}")
+  new_balance = balance + amount
+  cursor.execute("UPDATE accounts SET balance = %s WHERE acc_num = %s", (new_balance, acc_num))
+  conn.commit()
+  print(f"Deposit successful. Your balance is now {new_balance}")
+  conn.close()
 
 def modify_account():
   acc_num = acc_num_entry.get()
@@ -114,27 +127,15 @@ def on_balance_check():
   balance = check_balance(acc_num)
   balance_label.config(text="Your balance is: " + str(balance))
 
-root = tk.Tk()
-root.title("BigBucks Bank")
+window = tk.Tk()
 
-signin_frame = tk.Frame(root, padx=10, pady=10)
-signin_frame.pack()
+greeting = tk.Label(text="BigBucks Bank",width=10) 
+font=("Times",100)
+greeting.pack()
+window.mainloop()
 
-welcome_label = tk.Label(signin_frame, text="Welcome to BigBucks Bank!")
-welcome_label.grid(row=0, columnspan=2)
 
-acc_num_label_signin = tk.Label(signin_frame, text="Account Number:")
-acc_num_label_signin.grid(row=1, column=0)
-acc_num_entry = tk.Entry(signin_frame)
-acc_num_entry.grid(row=1, column=1)
 
-acc_pin_label_signin = tk.Label(signin_frame, text="PIN:")
-acc_pin_label_signin.grid(row=2, column=0)
-acc_pin_entry = tk.Entry(signin_frame)
-acc_pin_entry.grid(row=2, column=1)
-
-sign_in_button = tk.Button(signin_frame, text="Sign In", command=sign_in)
-sign_in_button.grid(row=3, columnspan=2, pady=5)
 
 welcome_menu()
 while True:
@@ -172,5 +173,7 @@ while True:
     
     elif option == 2:
         create_acc()
+        print("Thank you for making an account with BigBucks Bank. Please sign in.")
+        bank_menu()
         break
 
