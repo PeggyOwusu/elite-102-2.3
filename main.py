@@ -1,6 +1,6 @@
 import mysql.connector
-
 import tkinter as tk
+
 
 print("Hello and welcome to BigBucks Bank.")
 print("-----------------------------------")
@@ -15,13 +15,14 @@ def user_selection():
   return user_selection
 
 def sign_in():
-  acc_num = input("Enter account number:")
+  acc_num = int(input("Enter account number:"))
   acc_pin = input("Enter account pin:")
   
   conn = mysql.connector.connect(database="bankapp", user="root", password="0saeAnnett3")
   cursor = conn.cursor()
-  cursor.execute("SELECT acc_num, acc_pin FROM accounts WHERE acc_num = %s", (acc_num))
+  cursor.execute("SELECT acc_num, acc_pin FROM accounts WHERE acc_num = %s", (acc_num,))
   account = cursor.fetchone()
+
 
   if account:
     if account[1] == acc_pin:
@@ -52,8 +53,8 @@ def create_acc():
 
   print("Account created successfully!")
   print("Your account number is:", acc_num)
-  #  print("After making your account, you will be sent to the welcome menue. Then you will select sign in.")
-  
+
+
 def bank_menu():
   print("1. Check Balance")
   print("2. Withdraw Money")
@@ -114,27 +115,19 @@ def delete_account():
   delete_success_label.config(text="Your account has been deleted. Goodbye.")
 
 
-def on_sign_in():
-  acc_num = acc_num_entry.get()
-  acc_pin = acc_pin_entry.get()
-  sign_in()
-
-def on_create_account():
-  create_acc()
-
-def on_balance_check():
-  acc_num = acc_num_entry.get()
-  balance = check_balance(acc_num)
-  balance_label.config(text="Your balance is: " + str(balance))
-
 window = tk.Tk()
 
-greeting = tk.Label(text="BigBucks Bank",width=10) 
+greeting = tk.Label(text="BigBucks Bank",width=50) 
 font=("Times",100)
 greeting.pack()
 window.mainloop()
 
+signin_button = tk.Button(text="Sign in",width=30)
+signin_button.pack()
 
+
+create_acc_button = tk.Button(text="Create Account", width=30)
+create_acc_button.pack()
 
 
 welcome_menu()
@@ -177,5 +170,4 @@ while True:
         bank_menu()
         break
 
-#https://realpython.com/python-gui-tkinter/ 
-#use link
+
