@@ -2,7 +2,7 @@ import mysql.connector
 import tkinter as tk
 
 
-print("Hello and welcome to BigBucks Bank.")
+print("Hello and welcome to Blueberry Bank.")
 print("-----------------------------------")
 
 def welcome_menu():
@@ -117,7 +117,7 @@ def delete_account():
 
 window = tk.Tk()
 
-greeting = tk.Label(text="BigBucks Bank",width=50) 
+greeting = tk.Label(text="Blueberry Bank",width=50) 
 font=("Times",100)
 greeting.pack()
 window.mainloop()
@@ -166,7 +166,7 @@ while True:
     
     elif option == 2:
         create_acc()
-        print("Thank you for making an account with BigBucks Bank. Please sign in.")
+        print("Thank you for making an account with Blueberry Bank. Please sign in.")
         bank_menu()
         break
 
